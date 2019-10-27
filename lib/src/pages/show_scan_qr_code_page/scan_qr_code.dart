@@ -19,7 +19,7 @@ class _ScanQRCodePageState extends State<ScanQRCodePage> {
      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: ()=>{
-                        Navigator.pushNamed(context, Constant.)
+                        Navigator.pushNamed(context,'/Constant')
                       },
           child: Icon(Icons.add_a_photo),
           backgroundColor: Colors.blue,

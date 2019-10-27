@@ -8,6 +8,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:my_qrcode/generate_qrcode_page.dart';
+import 'package:my_qrcode/src/my_app.dart';
 
 import 'package:my_qrcode/main.dart';
 
