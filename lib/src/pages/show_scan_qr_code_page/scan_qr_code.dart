@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_qrcode/src/pages/register_page/register.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../models/student.dart';
+import '../student/student_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MaterialApp(home: QRViewExample()));
 
@@ -24,30 +27,31 @@ class _QRViewExampleState extends State<QRViewExample> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: Text('Scan result: $qrText'),
-            ),
-          )
+              flex: 6,
+              child: QRView(key: qrKey, onQRViewCreated: _onQRViewCreated)),
         ],
       ),
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  Future _onQRViewCreated(QRViewController controller) async {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         qrText = scanData;
       });
     });
+    // find Record in Firebase
+    // var document = await Firestore.instance
+    //     .collection('COLLECTION_NAME')
+    //     .document('TESTID1');
+
+    // record exist
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return StudentPage();
+    }));
+    // record not exist
+    Navigator.pop(context);
   }
 
   @override

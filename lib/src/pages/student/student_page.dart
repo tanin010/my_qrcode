@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:my_qrcode/src/utils/constant.dart';
 
-class ScanQRCodePage extends StatefulWidget {
+class StudentPage extends StatefulWidget {
   @override
-  _ScanQRCodePageState createState() => _ScanQRCodePageState();
+  _StudentPageState createState() => _StudentPageState();
 }
 
-class _ScanQRCodePageState extends State<ScanQRCodePage> {
+class _StudentPageState extends State<StudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
