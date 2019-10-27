@@ -26,32 +26,38 @@ class _TablePageState extends State<TablePage> {
                   Row(
                     children: <Widget>[
                       Text("รหัสวิชา"),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Container(
                         width: 140,
                         child: TextFormField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding:
-                            EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
+                                EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
                           ),
                           keyboardType: TextInputType.text,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(width: 20,),
+                  SizedBox(
+                    width: 20,
+                  ),
                   Row(
                     children: <Widget>[
                       Text("ปี"),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Container(
                         width: 120,
                         child: TextFormField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding:
-                            EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
+                                EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
                           ),
                           keyboardType: TextInputType.text,
                         ),

@@ -19,7 +19,11 @@ class _EditpageState extends State<Editpage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 20),
-            child: Center(child: Text("ข้อมูลนิสิต",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+            child: Center(
+                child: Text(
+              "ข้อมูลนิสิต",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )),
           ),
           Padding(
             padding: const EdgeInsets.all(15),
@@ -129,16 +133,21 @@ class _EditpageState extends State<Editpage> {
                   ),
                   keyboardType: TextInputType.text,
                 ),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 120,left: 120),
+                  padding: const EdgeInsets.only(right: 120, left: 120),
                   child: Container(
                     height: 40,
                     width: double.infinity,
                     color: Constant.B_COLOR,
                     child: FlatButton(
-                      child: Text("บันทึก",style: TextStyle(color: Colors.white),),
-                      onPressed: (){},
+                      child: Text(
+                        "บันทึก",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {},
                     ),
                   ),
                 )
@@ -149,5 +158,4 @@ class _EditpageState extends State<Editpage> {
       ),
     );
   }
-
 }

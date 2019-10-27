@@ -1,21 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'dart:ui';
-
 import 'package:flutter/services.dart';
 import 'package:my_qrcode/src/utils/constant.dart';
-
 import 'package:qr_flutter/qr_flutter.dart';
-
 import 'package:flutter/rendering.dart';
-
 import 'dart:typed_data';
-
 import 'dart:async';
-
 import 'package:path_provider/path_provider.dart';
-
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -23,7 +15,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   GlobalKey globalKey = GlobalKey();
 
   final TextEditingController _textController1 = TextEditingController();
@@ -59,7 +50,11 @@ class _RegisterPageState extends State<RegisterPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 20),
-            child: Center(child: Text("ข้อมูลนิสิต",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+            child: Center(
+                child: Text(
+              "ข้อมูลนิสิต",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )),
           ),
           Padding(
             padding: const EdgeInsets.all(15),
@@ -176,15 +171,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   keyboardType: TextInputType.text,
                 ),
                 _buildContent(),
-                SizedBox(height: 30,),
+                SizedBox(
+                  height: 30,
+                ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 120,left: 120),
+                  padding: const EdgeInsets.only(right: 120, left: 120),
                   child: Container(
                     height: 40,
                     width: double.infinity,
                     color: Constant.B_COLOR,
                     child: FlatButton(
-                      child: Text("บันทึก",style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        "บันทึก",
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onPressed: shared,
                     ),
                   ),
@@ -196,10 +196,11 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
   Future shared() async {
     try {
       RenderRepaintBoundary boundary =
-      globalKey.currentContext.findRenderObject();
+          globalKey.currentContext.findRenderObject();
       var image = await boundary.toImage();
       ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData.buffer.asUint8List();
@@ -216,25 +217,25 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   _buildContent() => Padding(
-    padding: EdgeInsets.only(left: 30, right: 30, top: 40),
-    child: Center(
-      child: Column(
-        children: <Widget>[
-          RepaintBoundary(
-            key: globalKey,
-            child: QrImage(
-              backgroundColor: Colors.white,
-              data: _dataQRCode,
-              size: 150,
-              onError: (exception) {
-                print("Error QRCODE: $exception");
-              },
-            ),
-          )
-        ],
-      ),
-    ),
-  );
+        padding: EdgeInsets.only(left: 30, right: 30, top: 40),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              RepaintBoundary(
+                key: globalKey,
+                child: QrImage(
+                  backgroundColor: Colors.white,
+                  data: _dataQRCode,
+                  size: 150,
+                  onError: (exception) {
+                    print("Error QRCODE: $exception");
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+      );
 
   Change() {
     setState(() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:my_qrcode/src/utils/constant.dart';
+import '../show_scan_qr_code_page/scan_qr_code.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,7 +19,8 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 40,
               ),
-              Text("หน้าเมนูMENU", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold )),
+              Text("หน้าเมนูMENU",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 30,
               ),
@@ -29,8 +31,11 @@ class _HomePageState extends State<HomePage> {
                     width: 160,
                     height: 160,
                     child: FlatButton(
-                      onPressed: (){
-                        Navigator.pushNamed(context, Constant.SCANQRCODE_ROUTE);
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return QRViewExample();
+                        }));
                       },
                       child: Card(
                         color: Constant.V_COLOR,
@@ -40,10 +45,15 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.all(10),
                               child: Image.network(
                                 "https://cdn1.iconfinder.com/data/icons/qr-code-2/65/4-512.png",
-                                height: 100,color: Colors.white,
+                                height: 100,
+                                color: Colors.white,
                               ),
                             ),
-                            Text("QRCode",style: TextStyle(color: Colors.white,fontSize: 16),)
+                            Text(
+                              "QRCode",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            )
                           ],
                         ),
                       ),
@@ -53,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                     width: 160,
                     height: 160,
                     child: FlatButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.pushNamed(context, Constant.REGISTER_ROUTE);
                       },
                       child: Card(
@@ -64,9 +74,14 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               Image.network(
                                 "https://cdn0.iconfinder.com/data/icons/simple-seo-and-internet-icons/512/person_add-512.png",
-                                height: 100,color: Colors.white,
+                                height: 100,
+                                color: Colors.white,
                               ),
-                              Text("เพิ่มข้อมูล",style: TextStyle(color: Colors.white,fontSize: 16),)
+                              Text(
+                                "เพิ่มข้อมูล",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              )
                             ],
                           ),
                         ),
@@ -85,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                     width: 160,
                     height: 160,
                     child: FlatButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.pushNamed(context, Constant.TABLE_ROUTE);
                       },
                       child: Card(
@@ -96,9 +111,14 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               Image.network(
                                 "https://png.pngtree.com/svg/20150402/_table_icon_1188266.png",
-                                height: 100,color: Colors.white,
+                                height: 100,
+                                color: Colors.white,
                               ),
-                              Text("แสดงชื่อ",style: TextStyle(color: Colors.white,fontSize: 16),)
+                              Text(
+                                "แสดงชื่อ",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              )
                             ],
                           ),
                         ),
@@ -109,9 +129,7 @@ class _HomePageState extends State<HomePage> {
                     width: 160,
                     height: 160,
                     child: FlatButton(
-                      onPressed: (){
-
-                      },
+                      onPressed: () {},
                       child: Card(
                         color: Constant.P_COLOR,
                         child: Padding(
@@ -120,9 +138,14 @@ class _HomePageState extends State<HomePage> {
                             children: <Widget>[
                               Image.network(
                                 "https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-8/24/018_320_door_exit_logout-512.png",
-                                height: 100,color: Colors.white,
+                                height: 100,
+                                color: Colors.white,
                               ),
-                              Text("ออกระบบ",style: TextStyle(color: Colors.white,fontSize: 16),)
+                              Text(
+                                "ออกระบบ",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              )
                             ],
                           ),
                         ),

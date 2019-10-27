@@ -1,106 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/utils/constant.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+import '../../models/student.dart';
 
-class ScanQRCodePage extends StatefulWidget {
+void main() => runApp(MaterialApp(home: QRViewExample()));
+
+class QRViewExample extends StatefulWidget {
+  const QRViewExample({
+    Key key,
+  }) : super(key: key);
+
   @override
-
-  _ScanQRCodePageState createState() => _ScanQRCodePageState();
+  State<StatefulWidget> createState() => _QRViewExampleState();
 }
 
-class _ScanQRCodePageState extends State<ScanQRCodePage> {
+class _QRViewExampleState extends State<QRViewExample> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  var qrText = "";
+  QRViewController controller;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Constant.V_COLOR,
-        title: Text("ข้อมูลนิสิต"),
-      ),
-     floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: ()=>{
-                        Navigator.pushNamed(context,'/Constant')
-                      },
-          child: Icon(Icons.add_a_photo),
-          backgroundColor: Colors.blue,
-        ),
-
-      body: ListView(
+      body: Column(
         children: <Widget>[
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: FittedBox(
-              child: DataTable(
-                columns: <DataColumn>[
-                  DataColumn(
-                    label: Text('ลำดับ'),
-                  ),
-                  DataColumn(
-                    label: Text('รหัสนิสิต'),
-                  ),
-                  DataColumn(
-                    label: Text('ชื่อ-นามสกุล'),
-                  ),
-                  DataColumn(
-                    label: Text('mid'),
-                  ),
-                  DataColumn(
-                    label: Text('final'),
-                  ),
-                  DataColumn(
-                    label: Text('คะแนนเก็บ ครั้ง1'),
-                  ),
-                  DataColumn(
-                    label: Text('คะแนนเก็บ ครั้ง2'),
-                  ),
-                  DataColumn(
-                    label: Text('คะแนนรวม'),
-                  ),
-                  DataColumn(
-                    label: Text('เกรด'),
-                  ),
-                ],
-                rows: <DataRow>[
-                  DataRow(cells: [
-                    DataCell(Text('1')),
-                    DataCell(Text('581463001')),
-                    DataCell(Text('มุกเอง')),
-                    DataCell(Text('40')),
-                    DataCell(Text('40')),
-                    DataCell(Text('10')),
-                    DataCell(Text('8')),
-                    DataCell(
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          contentPadding:
-                          EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                        ),
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                    DataCell(Text('F')),
-                  ]),
-                ],
-              ),
+          Expanded(
+            flex: 5,
+            child: QRView(
+              key: qrKey,
+              onQRViewCreated: _onQRViewCreated,
             ),
           ),
-          SizedBox(height: 30,),
-          Padding(
-            padding: const EdgeInsets.only(right: 150,left: 150),
-            child: Container(
-              height: 40,
-              width: double.infinity,
-              color: Constant.V_COLOR,
-              child: FlatButton(
-                child: Text("บันทึก",style: TextStyle(color: Colors.white),),
-                onPressed: () {},
-              ),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Text('Scan result: $qrText'),
             ),
           )
         ],
       ),
     );
   }
-  
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      setState(() {
+        qrText = scanData;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 }
