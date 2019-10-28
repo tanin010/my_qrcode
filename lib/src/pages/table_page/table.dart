@@ -1,183 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:my_qrcode/src/models/subjects.dart';
 import 'package:my_qrcode/src/utils/constant.dart';
+import 'package:fab_circular_menu/fab_circular_menu.dart';
 
 class TablePage extends StatefulWidget {
+
+  final Function() onPressed;
+  final String tooltip;
+  final IconData icon;
+
+  TablePage({this.onPressed, this.tooltip, this.icon});
+
   @override
   _TablePageState createState() => _TablePageState();
 }
 
-class _TablePageState extends State<TablePage> {
+class _TablePageState extends State<TablePage> with SingleTickerProviderStateMixin{
+
   @override
   Widget build(BuildContext context) {
+    var _width = MediaQuery.of(context).size.width / 2;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Constant.G_COLOR,
         title: Text("แสดงข้อมูลรายชื่อ"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 30),
-        child: ListView(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Row(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text("รหัสวิชา"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        width: 140,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding:
-                                EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("ปี"),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        width: 120,
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            contentPadding:
-                                EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                          ),
-                          keyboardType: TextInputType.text,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: FittedBox(
-                    child: DataTable(
-                      columns: <DataColumn>[
-                        DataColumn(
-                          label: Text('ลำดับ'),
-                        ),
-                        DataColumn(
-                          label: Text('รหัสนิสิต'),
-                        ),
-                        DataColumn(
-                          label: Text('ชื่อ-นามสกุล'),
-                        ),
-                        DataColumn(
-                          label: Text('mid'),
-                        ),
-                        DataColumn(
-                          label: Text('final'),
-                        ),
-                        DataColumn(
-                          label: Text('คะแนนเก็บ ครั้ง1'),
-                        ),
-                        DataColumn(
-                          label: Text('คะแนนเก็บ ครั้ง2'),
-                        ),
-                        DataColumn(
-                          label: Text('คะแนนรวม'),
-                        ),
-                        DataColumn(
-                          label: Text('เกรด'),
-                        ),
-                      ],
-                      rows: <DataRow>[
-                        DataRow(cells: [
-                          DataCell(Text('1')),
-                          DataCell(Text('581463001')),
-                          DataCell(Text('มุกเอง')),
-                          DataCell(Text('30')),
-                          DataCell(Text('30')),
-                          DataCell(Text('10')),
-                          DataCell(Text('8')),
-                          DataCell(Text('30')),
-                          DataCell(Text('F')),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text('2')),
-                          DataCell(Text('581463001')),
-                          DataCell(Text('มุกเอง')),
-                          DataCell(Text('30')),
-                          DataCell(Text('30')),
-                          DataCell(Text('10')),
-                          DataCell(Text('8')),
-                          DataCell(Text('30')),
-                          DataCell(Text('F')),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text('3')),
-                          DataCell(Text('581463001')),
-                          DataCell(Text('มุกเอง')),
-                          DataCell(Text('30')),
-                          DataCell(Text('30')),
-                          DataCell(Text('10')),
-                          DataCell(Text('8')),
-                          DataCell(Text('30')),
-                          DataCell(Text('F')),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text('4')),
-                          DataCell(Text('581463001')),
-                          DataCell(Text('มุกเอง')),
-                          DataCell(Text('30')),
-                          DataCell(Text('30')),
-                          DataCell(Text('10')),
-                          DataCell(Text('8')),
-                          DataCell(Text('30')),
-                          DataCell(Text('F')),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text('5')),
-                          DataCell(Text('581463001')),
-                          DataCell(Text('มุกเอง')),
-                          DataCell(Text('30')),
-                          DataCell(Text('30')),
-                          DataCell(Text('10')),
-                          DataCell(Text('8')),
-                          DataCell(Text('30')),
-                          DataCell(Text('F')),
-                        ]),
-                        DataRow(cells: [
-                          DataCell(Text('6')),
-                          DataCell(Text('581463001')),
-                          DataCell(Text('มุกเอง')),
-                          DataCell(Text('30')),
-                          DataCell(Text('30')),
-                          DataCell(Text('10')),
-                          DataCell(Text('8')),
-                          DataCell(Text('30')),
-                          DataCell(Text('F')),
-                        ]),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      body: FabCircularMenu(
+      ringColor: Colors.grey,
+      options: <Widget>[
+        IconButton(icon: Icon(Icons.add), onPressed: () {}, iconSize: 48.0, color: Colors.white),
+        IconButton(icon: Icon(Icons.delete), onPressed: () {}, iconSize: 48.0, color: Colors.white),
+        IconButton(icon: Icon(Icons.update), onPressed: () {}, iconSize: 48.0, color: Colors.white),
+
+      ], 
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2
         ),
-      ),
+        physics: BouncingScrollPhysics(),
+        itemCount: subject.length,
+        itemBuilder: (context, index){
+          return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Container(
+                          width: _width,
+                          height: _width - 70,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                              /*child: FadeInImage(
+                                image: NetworkImage(_categoryImage[index]),
+                                fit: BoxFit.cover,
+                                placeholder:
+                                    AssetImage('assets/images/loading.gif'),
+                              ),*/
+                          ),
+                        ),
+                      ),
+                      Text(subject[index].name,
+                          style: Theme.of(context).textTheme.body2),
+                      SizedBox(width: 5),
+                      Text('รหัสวิชา: '+subject[index].subjectcode.toString(),
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold
+                          )),
+                    ],
+                  ),
+                );
+              }
+            ),
+          ),
+        ),
+      )
+      )
     );
   }
 }
