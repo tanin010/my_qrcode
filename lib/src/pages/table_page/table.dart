@@ -4,13 +4,6 @@ import 'package:my_qrcode/src/utils/constant.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 
 class TablePage extends StatefulWidget {
-
-  final Function() onPressed;
-  final String tooltip;
-  final IconData icon;
-
-  TablePage({this.onPressed, this.tooltip, this.icon});
-
   @override
   _TablePageState createState() => _TablePageState();
 }
