@@ -26,6 +26,8 @@ dependencies:
   path_provider: ^1.1.0
   qr_flutter: ^2.0.0+51
   qr_code_scanner: ^0.0.12
+  cloud_firestore: ^0.12.9+5
+  fab_circular_menu: ^0.1.1
 
 dev_dependencies:
   flutter_test:

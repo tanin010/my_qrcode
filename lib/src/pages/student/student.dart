@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';         
 import 'package:my_qrcode/src/utils/constant.dart';
 
 class ScanQRCodePage extends StatefulWidget {

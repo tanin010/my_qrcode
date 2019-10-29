@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';                       //หน้ากรอกข้อมูลนิสิต
 import 'package:my_qrcode/src/utils/constant.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/rendering.dart';

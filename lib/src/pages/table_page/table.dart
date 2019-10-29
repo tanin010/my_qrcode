@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';               //หน้าแสดงตาราง
 import 'package:my_qrcode/src/utils/constant.dart';
 
 class TablePage extends StatefulWidget {

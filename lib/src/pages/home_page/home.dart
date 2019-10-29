@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return QRViewExample();
+                          return QRViewExample();//ไปหน้าscan_qr_code
                         }));
                       },
                       child: Card(
