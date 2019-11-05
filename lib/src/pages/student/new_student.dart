@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:flutter/services.dart';                       //หน้ากรอกข้อมูลนิสิต
+import 'package:flutter/services.dart'; //หน้ากรอกข้อมูลนิสิต
 import 'package:my_qrcode/src/utils/constant.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/rendering.dart';
@@ -9,12 +9,12 @@ import 'dart:typed_data';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
-class RegisterPage extends StatefulWidget {
+class NewStudent extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _NewStudentState createState() => _NewStudentState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _NewStudentState extends State<NewStudent> {
   GlobalKey globalKey = GlobalKey();
 
   final TextEditingController _textController1 = TextEditingController();

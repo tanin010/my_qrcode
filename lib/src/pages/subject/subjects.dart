@@ -1,20 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/models/subjects.dart';
+import 'package:flutter/material.dart'; //หน้าแสดงตาราง
 import 'package:my_qrcode/src/utils/constant.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import '../../models/subjects.dart';
 
-class StudentPage extends StatefulWidget {
+class SubjectsPage extends StatefulWidget {
   @override
-  _TablePageState createState() => _TablePageState();
+  _SubjectsPageState createState() => _SubjectsPageState();
 }
 
-<<<<<<< HEAD
-class _TablePageState extends State<StudentPage> with SingleTickerProviderStateMixin{
-
-=======
-class _TablePageState extends State<TablePage>
+class _SubjectsPageState extends State<SubjectsPage>
     with SingleTickerProviderStateMixin {
->>>>>>> fa25019aa1324fe45d2e8e3cafa4197e713103a1
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width / 2;

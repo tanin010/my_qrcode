@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/pages/register_page/register.dart';
+import 'package:my_qrcode/src/pages/table_page/table.dart';
+import '../student/new_student.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../models/student.dart';
 import '../student/student_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-void main() => runApp(MaterialApp(home: QRViewExample()));
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({
@@ -48,7 +47,7 @@ class _QRViewExampleState extends State<QRViewExample> {
 
     // record exist
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return StudentPage();
+      return TablePage();
     }));
     // record not exist
     Navigator.pop(context);
