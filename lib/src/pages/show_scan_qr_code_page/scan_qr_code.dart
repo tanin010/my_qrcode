@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_qrcode/src/pages/table_page/table.dart';
 import '../student/new_student.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../models/student.dart';
