@@ -8,13 +8,8 @@ class StudentPage extends StatefulWidget {
   _TablePageState createState() => _TablePageState();
 }
 
-<<<<<<< HEAD
 class _TablePageState extends State<StudentPage> with SingleTickerProviderStateMixin{
 
-=======
-class _TablePageState extends State<TablePage>
-    with SingleTickerProviderStateMixin {
->>>>>>> fa25019aa1324fe45d2e8e3cafa4197e713103a1
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width / 2;
