@@ -3,12 +3,12 @@ import 'package:my_qrcode/src/models/subjects.dart';
 import 'package:my_qrcode/src/utils/constant.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 
-class TablePage extends StatefulWidget {
+class StudentPage extends StatefulWidget {
   @override
   _TablePageState createState() => _TablePageState();
 }
 
-class _TablePageState extends State<TablePage> with SingleTickerProviderStateMixin{
+class _TablePageState extends State<StudentPage> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {

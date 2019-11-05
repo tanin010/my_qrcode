@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';               //หน้าแสดงตาราง
 import 'package:my_qrcode/src/utils/constant.dart';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:my_qrcode/src/models/subjects.dart';
+
 
 class TablePage extends StatefulWidget {
   @override
