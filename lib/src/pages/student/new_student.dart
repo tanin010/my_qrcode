@@ -1,250 +1,245 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'dart:ui';
-import 'package:flutter/services.dart'; //หน้ากรอกข้อมูลนิสิต
-import 'package:my_qrcode/src/utils/constant.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flutter/rendering.dart';
-import 'dart:typed_data';
-import 'dart:async';
-import 'package:path_provider/path_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:my_qrcode/src/service/nisitmanage.dart';
 
+final databaseRef = Firestore.instance.collection('/Students');
+User user;
+final DateTime timestamp = DateTime.now();
 class NewStudent extends StatefulWidget {
   @override
   _NewStudentState createState() => _NewStudentState();
 }
 
 class _NewStudentState extends State<NewStudent> {
-  GlobalKey globalKey = GlobalKey();
 
-  final TextEditingController _textController1 = TextEditingController();
-  final TextEditingController _textController2 = TextEditingController();
-  final TextEditingController _textController3 = TextEditingController();
-  final TextEditingController _textController4 = TextEditingController();
-  final TextEditingController _textController5 = TextEditingController();
-  final TextEditingController _textController6 = TextEditingController();
+  String stdCode;
+  String subjectCode;
+  String stdName;
+  String factName;
+  String subFactName;
+  String stdYear;
 
-  String _dataQRCode = "";
+  final TextEditingController _controllers = new TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  var items =[  'คณะเกษตร',
+  'คณะบริหารธุรกิจ',	       
+  'คณะสังคมศาสตร์',
+  'คณะประมง',	       
+  'คณะสัตวแพทยศาสตร์',
+  'คณะมนุษยศาสตร์',	       
+  'คณะวนศาสตร์',	       
+  'คณะวิทยาศาสตร์',
+  'คณะวิศวกรรมศาสตร์',	      
+  'คณะศึกษาศาสตร์',	    
+  'คณะเศรษฐศาสตร์'];
+  
 
   @override
-  void initState() {
-    super.initState();
-
-    _textController1.addListener(Change);
-    _textController2.addListener(Change);
-    _textController3.addListener(Change);
-    _textController4.addListener(Change);
-    _textController5.addListener(Change);
-    _textController6.addListener(Change);
+  void dispose(){
+    _controllers.dispose();
+    super.dispose();
   }
+  
+  void createNisit(String stdcode) async{
+    DocumentSnapshot doc = await databaseRef.document(stdcode).get();
+
+    if(!doc.exists){
+      databaseRef.document(stdCode).setData({
+        "stdCode": stdCode,
+        "subjectCode": subjectCode,
+        "stdName": stdName,
+        "factName": factName,
+        "subFaceName": subFactName,
+        "stdYear": stdYear,
+        "timestamp": timestamp
+      });
+      doc = await databaseRef.document(stdCode).get();
+       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล คุณ $stdName')));
+    }else{
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('มีชื่อ $stdName อยู่แล้ว')));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Constant.B_COLOR,
-        centerTitle: true,
-        title: Text("เพิ่มข้อมูลนักศึกษา"),
-      ),
+      key: _scaffoldKey,
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Center(
-                child: Text(
-              "ข้อมูลนิสิต",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            )),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "รหัสวิชา",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Prompt_Regular',
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: _textController1,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                  ),
-                  keyboardType: TextInputType.text,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "รหัสนักศึกษา",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Prompt_Regular',
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: _textController2,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "ชื่อ-นามสกุล",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Prompt_Regular',
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: _textController3,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                    counterText: '',
-                  ),
-                  maxLength: 10,
-                  keyboardType: TextInputType.text,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "ปี",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Prompt_Regular',
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: _textController4,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "คณะ",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Prompt_Regular',
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: _textController5,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                  ),
-                  keyboardType: TextInputType.text,
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "สาขา",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Prompt_Regular',
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                TextFormField(
-                  controller: _textController6,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(15.0, 13.0, 15.0, 13.0),
-                  ),
-                  keyboardType: TextInputType.text,
-                ),
-                _buildContent(),
-                SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 120, left: 120),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.arrow_back),
+                iconSize: 30.0,
+              ),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child:Text('เพิ่มข้อมูลนิสิต',style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold
+              ),),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text('บันทึกข้อมูลนิสิตลงในรายวิชา',style:TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.grey
+                )),
+              ),
+              SizedBox(height: 10.0),
+              Center(
                   child: Container(
-                    height: 40,
-                    width: double.infinity,
-                    color: Constant.B_COLOR,
-                    child: FlatButton(
-                      child: Text(
-                        "บันทึก",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: shared,
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 15.0),
+                        TextFormField(
+                          validator: (val) {
+                            if (val.trim().length != 10){
+                              return 'รหัสนิสิตไม่ถูกต้อง';
+                            }else{
+                              return null;
+                            }
+                          },
+                          
+                          onSaved: (val) {
+                            stdCode = val;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'รหัสนิสิต',
+                            icon: Icon(Icons.lock)
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty){
+                              return 'กรุณากรอกข้อมูล';
+                            }else{
+                              return null;
+                            }
+                          },
+                          onSaved: (val) {
+                            stdName = val;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'ชื่อ-นามสกุล',
+                            icon: Icon(Icons.person)
+                          ),
+                          keyboardType: TextInputType.text,
+                        ),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                           validator: (val) {
+                            if (val.isEmpty){
+                              return 'กรุณากรอกข้อมูล';
+                            }else{
+                              return null;
+                            }
+                          },
+                          onSaved: (val) {
+                            subjectCode = val;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'รหัสวิชา',
+                            icon: Icon(Icons.book)
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          controller: _controllers,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintText: 'คณะ',
+                            icon: Icon(Icons.accessibility_new),
+                          ),
+                          onSaved: (val) {
+                            factName = val;
+                          },
+                          
+                        ),
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.arrow_drop_down),
+                          onSelected: (String value){
+                            _controllers.text = value;
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return items.map<PopupMenuItem<String>>((String value) {
+                              return new PopupMenuItem(child: new Text(value), value: value);
+                            }).toList();
+                          },
+                        ),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty){
+                              return 'กรุณากรอกข้อมูล';
+                            }else{
+                              return null;
+                            }
+                          },
+                          onSaved: (val) {
+                            subFactName = val;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'สาขา',
+                            icon: Icon(Icons.adb)
+                          ),
+
+                        ),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          validator: (val) {
+                            if (val.trim().length > 1 || val.isEmpty){
+                              return 'ข้อมูลชั้นปีไม่ถูกต้อง';
+                            }else{
+                              return null;
+                            }
+                          },
+                          onSaved: (val) {
+                            stdYear = val;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'ชั้นปี',
+                            icon: Icon(Icons.star)
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                        SizedBox(height: 30.0),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: RaisedButton(
+                            onPressed: () {
+                              if(_formKey.currentState.validate()){
+                                _formKey.currentState.save();
+                                createNisit(stdCode);
+                              }
+                            },
+                            child: Text('บันทึกข้อมูล'),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           )
         ],
       ),
     );
   }
 
-  Future shared() async {
-    try {
-      RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
-      var image = await boundary.toImage();
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData.buffer.asUint8List();
-
-      final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/image.png').create();
-      await file.writeAsBytes(pngBytes);
-
-      final channel = MethodChannel('cm.share/share');
-      channel.invokeMethod('shareFile', 'image.png');
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  _buildContent() => Padding(
-        padding: EdgeInsets.only(left: 30, right: 30, top: 40),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              RepaintBoundary(
-                key: globalKey,
-                child: QrImage(
-                  backgroundColor: Colors.white,
-                  data: _dataQRCode,
-                  size: 150,
-                  onError: (exception) {
-                    print("Error QRCODE: $exception");
-                  },
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-
-  Change() {
-    setState(() {
-      _dataQRCode = _textController1.text;
-      _dataQRCode = _textController2.text;
-      _dataQRCode = _textController3.text;
-      _dataQRCode = _textController4.text;
-      _dataQRCode = _textController5.text;
-      _dataQRCode = _textController6.text;
-    });
-  }
 }
