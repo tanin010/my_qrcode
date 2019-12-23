@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/pages/student/new_student.dart';
+import 'package:myqr_liang/src/pages/show_scan_qr_code/scan_qr_code.dart';
+
+
 import './src/pages/edit_page/edit.dart';
 import './src/pages/home_page/home.dart';
 import './src/pages/student/new_student.dart';
-import './src/pages/show_scan_qr_code_page/scan_qr_code.dart';
+
 import './src/pages/subject/subjects.dart';
 import './src/utils/constant.dart';
 

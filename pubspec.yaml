@@ -1,4 +1,4 @@
-name: my_qrcode
+name: myqr_liang
 description: A new Flutter application.
 
 # The following defines the version and build number for your application.
@@ -24,10 +24,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   path_provider: ^1.1.0
-  qr_flutter: ^2.0.0+51
+  qr_flutter: ^3.1.0
   qr_code_scanner: ^0.0.12
   cloud_firestore: ^0.12.9+5
   fab_circular_menu: ^0.1.1
+  
+  url_launcher: ^5.0.2
+  
 
 dev_dependencies:
   flutter_test:
@@ -45,7 +48,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+   # - assets/liang.jpg
   ##-assets/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

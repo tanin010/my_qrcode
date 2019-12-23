@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/utils/constant.dart';
+import 'package:myqr_liang/src/utils/constant.dart';
+
 
 class Editpage extends StatefulWidget {
   @override

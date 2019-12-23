@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_qrcode/src/service/nisitmanage.dart';
+import 'package:myqr_liang/src/models/subjects.dart';
+import 'package:myqr_liang/src/service/nisitmanage.dart';
+
 
 final databaseRef = Firestore.instance.collection('/Students');
 User user;
@@ -20,6 +22,7 @@ class _NewStudentState extends State<NewStudent> {
   String stdYear;
 
   final TextEditingController _controllers = new TextEditingController();
+  final TextEditingController _controllers2 = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -34,15 +37,18 @@ class _NewStudentState extends State<NewStudent> {
   'คณะวิศวกรรมศาสตร์',	      
   'คณะศึกษาศาสตร์',	    
   'คณะเศรษฐศาสตร์'];
+
+  List<Subject> subject;
   
 
   @override
   void dispose(){
     _controllers.dispose();
+    _controllers2.dispose();
     super.dispose();
   }
   
-  void createNisit(String stdcode) async{
+  void createNisit(String stdcode,String code) async{
     DocumentSnapshot doc = await databaseRef.document(stdcode).get();
 
     if(!doc.exists){
@@ -54,9 +60,21 @@ class _NewStudentState extends State<NewStudent> {
         "subFaceName": subFactName,
         "stdYear": stdYear,
         "timestamp": timestamp
+      }).then((user){
+        Firestore.instance.collection('Subjects').document(code).collection('nisits').add({
+          "stdCode": stdCode,
+          "stdName": stdName,
+          "factName": factName,
+          "stdYear": stdYear,
+          "timestamp": timestamp
+        });
+      }).catchError((error) {
+        print(error);
       });
+
       doc = await databaseRef.document(stdCode).get();
        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล คุณ $stdName')));
+       Navigator.pop(context);
     }else{
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('มีชื่อ $stdName อยู่แล้ว')));
     }
@@ -141,22 +159,42 @@ class _NewStudentState extends State<NewStudent> {
                         ),
                         SizedBox(height: 20.0),
                         TextFormField(
-                           validator: (val) {
-                            if (val.isEmpty){
-                              return 'กรุณากรอกข้อมูล';
-                            }else{
-                              return null;
-                            }
-                          },
+                          controller: _controllers2,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintText: 'วิชาเรียน',
+                            icon: Icon(Icons.accessibility_new),
+                          ),
                           onSaved: (val) {
                             subjectCode = val;
                           },
-                          decoration: InputDecoration(
-                            hintText: 'รหัสวิชา',
-                            icon: Icon(Icons.book)
-                          ),
-                          keyboardType: TextInputType.number,
+                          
                         ),
+                        StreamBuilder(
+                          stream: Firestore.instance.collection('Subjects').snapshots(),
+                          builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
+                            if(snapshot.hasData){
+                              subject = snapshot.data.documents
+                                .map((doc) => Subject.fromMap(doc.data)).toList();
+                              return PopupMenuButton<String>(
+                                icon: Icon(Icons.arrow_drop_down),
+                                onSelected: (String value){
+                                  _controllers2.text = value;
+                                  
+                                },
+                                itemBuilder: (buildcontext) {
+                                  return subject.map<PopupMenuItem<String>>((Subject value) {
+                                    return new PopupMenuItem(child: new Text(value.name), value: value.uid.toString());
+                                  }).toList();
+                                  
+                                },
+                              );
+                            }else{
+                              return Center(
+                                child: Text('กำลังโหลดข้อมูล'),
+                              );
+                            }
+                        }),
                         SizedBox(height: 20.0),
                         TextFormField(
                           controller: _controllers,
@@ -224,7 +262,7 @@ class _NewStudentState extends State<NewStudent> {
                             onPressed: () {
                               if(_formKey.currentState.validate()){
                                 _formKey.currentState.save();
-                                createNisit(stdCode);
+                                createNisit(stdCode,subjectCode);
                               }
                             },
                             child: Text('บันทึกข้อมูล'),

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/pages/table_page/table.dart';
-import '../student/new_student.dart';
+import 'package:myqr_liang/src/pages/table_page/table.dart';
+
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import '../../models/student.dart';
-import '../student/student_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({

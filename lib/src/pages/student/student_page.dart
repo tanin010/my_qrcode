@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_qrcode/src/models/subjects.dart';
-import 'package:my_qrcode/src/utils/constant.dart';
+
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:myqr_liang/src/models/subjects.dart';
+import 'package:myqr_liang/src/utils/constant.dart';
 
 class StudentPage extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class StudentPage extends StatefulWidget {
 
 class _TablePageState extends State<StudentPage> with SingleTickerProviderStateMixin{
 
+  List<Subject> subject;
   @override
   Widget build(BuildContext context) {
     var _width = MediaQuery.of(context).size.width / 2;
@@ -42,49 +45,59 @@ class _TablePageState extends State<StudentPage> with SingleTickerProviderStateM
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: GridView.builder(
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
-                      physics: BouncingScrollPhysics(),
-                      itemCount: subject.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              Card(
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Container(
-                                  width: _width,
-                                  height: _width - 70,
-                                  child: ClipRRect(
+                  child: StreamBuilder(
+                    stream: Firestore.instance.collection('Subjects').snapshots(),
+                    builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
+                      if(snapshot.hasData){
+                        subject = snapshot.data.documents
+                          .map((doc) => Subject.fromMap(doc.data)).toList();
+                        
+                        return GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2),
+                        physics: BouncingScrollPhysics(),
+                        itemCount: subject.length,
+                        itemBuilder: (buildContext, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    /*child: FadeInImage(
-                                image: NetworkImage(_categoryImage[index]),
-                                fit: BoxFit.cover,
-                                placeholder:
-                                    AssetImage('assets/images/loading.gif'),
-                              ),*/
+                                  ),
+                                  child: Container(
+                                    width: _width,
+                                    height: _width - 70,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      /*child: FadeInImage(
+                                  image: NetworkImage(_categoryImage[index]),
+                                  fit: BoxFit.cover,
+                                  placeholder:
+                                      AssetImage('assets/images/loading.gif'),
+                                ),*/
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Text(subject[index].name,
-                                  style: Theme.of(context).textTheme.body2),
-                              SizedBox(width: 5),
-                              Text(
-                                  'รหัสวิชา: ' +
-                                      subject[index].subjectcode.toString(),
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        );
-                      }),
+                                Text(subject[index].name,
+                                    style: Theme.of(context).textTheme.body2),
+                                SizedBox(width: 5),
+                                Text(
+                                    'รหัสวิชา: ' +
+                                        subject[index].code.toString(),
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          );
+                        });
+                      }
+                    },
+                  )
                 ),
               ),
             )));

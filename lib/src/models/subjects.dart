@@ -1,19 +1,27 @@
 class Subject {
   final String name;
-  final int subjectcode;
+  final int code;
+  final String uid;
 
-  Subject({this.name, this.subjectcode});
+  Subject({
+    this.name, 
+    this.code,
+    this.uid
+  });
+
+  Subject.fromMap(Map snapshot):
+    uid = snapshot['uid'] ?? '',
+    code = snapshot['code'] ?? '',
+    name = snapshot['name'] ?? '';
+
+  toJson(){
+    return {
+      'uid': uid,
+      'code': code,
+      'name': name
+    };
+  }
+  
 }
 
-List<Subject> subject = [
-  Subject(name: 'IOT', subjectcode: 02938554),
-  Subject(name: 'HCI', subjectcode: 02913568),
-  Subject(name: 'RAMIL', subjectcode: 02945632),
-  Subject(name: 'NETWORK', subjectcode: 02942457),
-  Subject(name: 'PROJECT', subjectcode: 02945245),
-  Subject(name: 'CALCULUS', subjectcode: 02945654),
-  Subject(name: 'CALCULUS2', subjectcode: 02945665),
-  Subject(name: 'WEP APP', subjectcode: 02945245),
-  Subject(name: 'MOBILE APP', subjectcode: 02945124),
-  Subject(name: 'ENGLISH', subjectcode: 02941546)
-];
+
