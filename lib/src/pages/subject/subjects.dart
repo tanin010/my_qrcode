@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:myqr_liang/src/models/subjects.dart';
+import 'package:myqr_liang/src/pages/subject/students_subject.dart';
 import 'package:myqr_liang/src/utils/constant.dart';
 
 class SubjectsPage extends StatefulWidget {
@@ -63,22 +64,28 @@ class _SubjectsPageState extends State<SubjectsPage> with SingleTickerProviderSt
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: <Widget>[
-                                Card(
-                                  elevation: 5,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Container(
-                                    width: _width,
-                                    height: _width - 70,
-                                    child: ClipRRect(
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context, 
+                                      MaterialPageRoute(builder: (context) => ListStudensPage(uid: subject[index].uid)));
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8.0),
-                                      /*child: FadeInImage(
-                                  image: NetworkImage(_categoryImage[index]),
-                                  fit: BoxFit.cover,
-                                  placeholder:
-                                      AssetImage('assets/images/loading.gif'),
-                                ),*/
+                                    ),
+                                    child: Container(
+                                      width: _width,
+                                      height: _width - 70,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        /*child: FadeInImage(
+                                    image: NetworkImage(_categoryImage[index]),
+                                    fit: BoxFit.cover,
+                                    placeholder:
+                                        AssetImage('assets/images/loading.gif'),
+                                  ),*/
+                                      ),
                                     ),
                                   ),
                                 ),

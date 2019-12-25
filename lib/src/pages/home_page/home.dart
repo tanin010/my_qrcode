@@ -23,9 +23,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical:30.0),
-            child: Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Row(
@@ -150,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  "แสดงqrนิสิต",
+                                  "แสดงนิสิต",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 )
@@ -164,7 +162,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-          )
         ],
       ),
     );

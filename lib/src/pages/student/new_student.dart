@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myqr_liang/src/models/subjects.dart';
 import 'package:myqr_liang/src/service/nisitmanage.dart';
+import 'dart:io';    
+import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore    
+import 'package:image_picker/image_picker.dart'; // For Image Picker    
+import 'package:path/path.dart' as Path; 
 
 
 final databaseRef = Firestore.instance.collection('/Students');
@@ -14,6 +18,8 @@ class NewStudent extends StatefulWidget {
 
 class _NewStudentState extends State<NewStudent> {
 
+  File _image;    
+  String _uploadedFileURL;  
   String stdCode;
   String subjectCode;
   String stdName;
@@ -52,6 +58,7 @@ class _NewStudentState extends State<NewStudent> {
     DocumentSnapshot doc = await databaseRef.document(stdcode).get();
 
     if(!doc.exists){
+      uploadFile();
       databaseRef.document(stdCode).setData({
         "stdCode": stdCode,
         "subjectCode": subjectCode,
@@ -59,13 +66,15 @@ class _NewStudentState extends State<NewStudent> {
         "factName": factName,
         "subFaceName": subFactName,
         "stdYear": stdYear,
+        "image": _uploadedFileURL,
         "timestamp": timestamp
       }).then((user){
-        Firestore.instance.collection('Subjects').document(code).collection('nisits').add({
+        Firestore.instance.collection('Subjects').document(code).collection('nisits').document(stdcode).setData({
           "stdCode": stdCode,
           "stdName": stdName,
           "factName": factName,
           "stdYear": stdYear,
+          "image": _uploadedFileURL,
           "timestamp": timestamp
         });
       }).catchError((error) {
@@ -79,7 +88,27 @@ class _NewStudentState extends State<NewStudent> {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('มีชื่อ $stdName อยู่แล้ว')));
     }
   }
+  Future uploadFile() async {    
+    StorageReference storageReference = FirebaseStorage.instance    
+        .ref()    
+        .child('subjects_pic/${Path.basename(_image.path)}}');    
+    StorageUploadTask uploadTask = storageReference.putFile(_image);    
+    await uploadTask.onComplete;    
+    print('File Uploaded');    
+    storageReference.getDownloadURL().then((fileURL) {    
+      setState(() {    
+        _uploadedFileURL = fileURL;    
+      });    
+    });    
+  }
 
+  Future chooseFile() async {    
+   await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {    
+     setState(() {    
+       _image = image;    
+     });    
+   });    
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +149,28 @@ class _NewStudentState extends State<NewStudent> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        SizedBox(height: 15.0),
+                        _image != null    
+                        ? Container(
+                          width: 150,
+                          height: 150,
+                          child: GestureDetector(
+                            onTap: chooseFile,
+                            child: CircleAvatar(
+                              child: Image.asset(_image.path)
+                            ),
+                          ),
+                        )
+                        : Container(
+                          width: 150,
+                          height: 150,
+                          child: GestureDetector(
+                            onTap: chooseFile,
+                            child: CircleAvatar(
+                              child: Image.network('https://firebasestorage.googleapis.com/v0/b/myqrliang.appspot.com/o/subjects_pic%2Fuser.png?alt=media&token=e0c4b41f-b833-4db5-bd2b-27f6dde61b19')
+                              
+                            ),
+                          )
+                        ),
                         TextFormField(
                           validator: (val) {
                             if (val.trim().length != 10){
@@ -260,9 +310,31 @@ class _NewStudentState extends State<NewStudent> {
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: RaisedButton(
                             onPressed: () {
-                              if(_formKey.currentState.validate()){
-                                _formKey.currentState.save();
-                                createNisit(stdCode,subjectCode);
+                              if(_image == null){
+                                Widget okButton = FlatButton(
+                                  child: Text("แก้ไข"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                                AlertDialog alert = AlertDialog(
+                                  title: Text("ข้อมูลไม่ครบถ้วน"),
+                                  content: Text("กรุณาเพิ่มรูปภาพประจำตัว."),
+                                  actions: [
+                                    okButton,
+                                  ],
+                                );
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return alert;
+                                  },
+                                );
+                              }else{
+                                if(_formKey.currentState.validate()){
+                                  _formKey.currentState.save();
+                                  createNisit(stdCode,subjectCode);
+                                }
                               }
                             },
                             child: Text('บันทึกข้อมูล'),

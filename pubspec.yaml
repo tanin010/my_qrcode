@@ -28,7 +28,9 @@ dependencies:
   qr_code_scanner: ^0.0.12
   cloud_firestore: ^0.12.9+5
   fab_circular_menu: ^0.1.1
-  
+  font_awesome_flutter: ^8.5.0
+  image_picker: ^0.6.2+3    
+  firebase_storage: ^3.1.0
   url_launcher: ^5.0.2
   
 
