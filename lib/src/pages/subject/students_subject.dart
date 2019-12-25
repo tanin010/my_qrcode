@@ -95,7 +95,7 @@ class _ListStudensPageState extends State<ListStudensPage> {
                             icon: Icon(FontAwesomeIcons.qrcode),
                             onPressed: () {
                               Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => QrCodePage(code: students[index].stdCode,image: students[index].stdCode)));
+                                MaterialPageRoute(builder: (context) => QrCodePage(code: students[index].stdCode,image: students[index].image)));
                             },
                           ),
                           title: Text('เลขที่ Code: '+'${students[index].stdCode}',style: TextStyle(

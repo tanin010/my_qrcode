@@ -6,6 +6,7 @@ class ListStudent {
   String stdName;
   String stdYear;
   String subjectCode;
+  String image;
   Timestamp regisTime;
 
 
@@ -16,6 +17,7 @@ class ListStudent {
     this.stdName,
     this.stdYear,
     this.subjectCode,
+    this.image,
     this.regisTime
   });
 
@@ -24,6 +26,7 @@ class ListStudent {
     stdCode = snapshot['stdCode'] ?? '',
     stdName = snapshot['stdName'] ?? '',
     stdYear = snapshot['stdYear'] ?? '',
+    image = snapshot['image'] ?? '',
     subjectCode = snapshot['subjectCode'] ?? '',
     regisTime = snapshot['timestamp'] ?? '';
 
