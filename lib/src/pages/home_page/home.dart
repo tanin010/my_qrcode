@@ -1,11 +1,12 @@
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:myqr_liang/src/pages/show_scan_qr_code/scan_qr_code.dart';
-import 'package:myqr_liang/src/service/create_image_qr_code.dart';
-import 'package:myqr_liang/src/utils/constant.dart';
-
-
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myqr_liang/src/pages/home_page/landding.dart';
+import 'package:myqr_liang/src/pages/show_scan_qr_code/found_info_nisit.dart';
+import 'package:myqr_liang/src/pages/student/new_student.dart';
+import 'package:myqr_liang/src/pages/subject/subjects.dart';
+import 'package:flutter/services.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -14,154 +15,87 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  String barcode = "";
+  List<String> data;
+  PageController _pageController;
+  int selectedIndex = 0;
+
+  @override
+  void initState(){
+    super.initState();
+    _pageController = PageController(
+      initialPage: 0
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void pageChanged(int index) {
+    setState(() {
+      this.selectedIndex = index;
+    });
+  }
+
+  onTap(int pageIndex) {
+    _pageController.jumpToPage(pageIndex);
+  }
+
+  Future scan() async {
+    try {
+      BarcodeScanner.scan().then((val) {
+        data = val.split(',');
+        Navigator.push(context, 
+          MaterialPageRoute(builder: (context) => ControllerNisit(idnisit: data)));
+      }).catchError((err) {
+        print(err);
+      });
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          this.barcode = 'The user did not grant the camera permission!';
+        });
+      } else {
+        setState(() => this.barcode = 'Unknown error: $e');
+      }
+    } on FormatException{
+      setState(() => this.barcode = 'null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      setState(() => this.barcode = 'Unknown error: $e');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('หน้าหลัก'),
-      ),
-      body: ListView(
+      body: PageView(
         children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      width: 160,
-                      height: 160,
-                      child: FlatButton(
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return QRViewExample();//ไปหน้าscan_qr_code
-                          }));
-                        },
-                        child: Card(
-                          color: Constant.V_COLOR,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Image.network(
-                                  "https://cdn1.iconfinder.com/data/icons/qr-code-2/65/4-512.png",
-                                  height: 100,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                "QRCode",
-                                style:
-                                    TextStyle(color: Colors.white, fontSize: 19),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 160,
-                      height: 160,
-                      child: FlatButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, Constant.REGISTER_ROUTE);
-                        },
-                        child: Card(
-                          color: Constant.B_COLOR,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: <Widget>[
-                                Image.network(
-                                  "https://cdn0.iconfinder.com/data/icons/simple-seo-and-internet-icons/512/person_add-512.png",
-                                  height: 100,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  "เพิ่มข้อมูล",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      width: 160,
-                      height: 160,
-                      child: FlatButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, Constant.TABLE_ROUTE);
-                        },
-                        child: Card(
-                          color: Constant.G_COLOR,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: <Widget>[
-                                Image.network(
-                                  "https://png.pngtree.com/svg/20150402/_table_icon_1188266.png",
-                                  height: 100,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  "แสดงชื่อ",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 160,
-                      height: 160,
-                      child: FlatButton(
-                        onPressed: () {
-                          Navigator.push(context, 
-                            MaterialPageRoute(builder: (context) =>  CreateimageqrcodePage())
-                          );
-                        },
-                        child: Card(
-                          color: Constant.P_COLOR,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              children: <Widget>[
-                                Image.network(
-                                  "https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-8/24/018_320_door_exit_logout-512.png",
-                                  height: 100,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  "แสดงนิสิต",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          SubjectsPage(),
+          LanddingPage(),
+        ],
+        controller: _pageController,
+        onPageChanged: pageChanged,
+        physics: NeverScrollableScrollPhysics(),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: selectedIndex,
+        onTap: onTap,
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.home),
+            title: Text("Home"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.search),
+            title: Text("Activity"),
+          ),
         ],
       ),
     );

@@ -6,6 +6,9 @@ import 'package:myqr_liang/src/models/subjects.dart';
 import 'package:myqr_liang/src/service/nisitmanage.dart';  
 import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore    
 import 'package:path/path.dart' as Path;
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as Im;
+import 'package:uuid/uuid.dart';
 
 
 final databaseRef = Firestore.instance.collection('/Students');
@@ -18,8 +21,9 @@ class NewStudent extends StatefulWidget {
 
 class _NewStudentState extends State<NewStudent> {
 
-  File _image;    
-  String _uploadedFileURL;  
+  File _image;
+  File file;
+  String postId = Uuid().v4(); 
   String stdCode;
   String subjectCode;
   String stdName;
@@ -54,33 +58,22 @@ class _NewStudentState extends State<NewStudent> {
     super.dispose();
   }
   
-  void createNisit(String stdcode,String code) async{
-    DocumentSnapshot doc = await databaseRef.document(stdcode).get();
+  void createNisit() async{
+    DocumentSnapshot doc = await databaseRef.document(stdCode).get();
 
     if(!doc.exists){
-      String url = await uploadFile();
+      await compressImage();
+      String url = await uploadFile(file);
       databaseRef.document(stdCode).setData({
         "stdCode": stdCode,
-        "subjectCode": subjectCode,
+        "subjectCode": {},
         "stdName": stdName,
         "factName": factName,
         "subFaceName": subFactName,
         "stdYear": stdYear,
         "image": url,
         "timestamp": timestamp
-      }).then((user){
-        Firestore.instance.collection('Subjects').document(code).collection('nisits').document(stdcode).setData({
-          "stdCode": stdCode,
-          "stdName": stdName,
-          "factName": factName,
-          "stdYear": stdYear,
-          "image": url,
-          "timestamp": timestamp
-        });
-      }).catchError((error) {
-        print(error);
       });
-
       doc = await databaseRef.document(stdCode).get();
        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล คุณ $stdName')));
        Navigator.pop(context);
@@ -88,10 +81,13 @@ class _NewStudentState extends State<NewStudent> {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('มีชื่อ $stdName อยู่แล้ว')));
     }
   }
-  Future uploadFile() async {
-    StorageReference ref = FirebaseStorage.instance.ref().child('students_pic/${Path.basename(_image.path)}}');
-    StorageUploadTask uploadTask = ref.putFile(_image);
-      return await (await uploadTask.onComplete).ref.getDownloadURL();
+
+  uploadFile(imageFile) async{
+    StorageUploadTask uploadTask = FirebaseStorage.instance.ref().child('students_pic/${Path.basename(_image.path)}')
+      .putFile(imageFile);
+      StorageTaskSnapshot storageSnap = await uploadTask.onComplete;
+      String downloadUrl = await storageSnap.ref.getDownloadURL();
+      return downloadUrl;
   }
 
   Future getImage() async {
@@ -102,36 +98,49 @@ class _NewStudentState extends State<NewStudent> {
    });    
   }
 
+  compressImage() async{
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    Im.Image imageFile = Im.decodeImage(_image.readAsBytesSync());
+    final compressedImageFile = File('$path/img_$postId.jpg')..writeAsBytesSync(Im.encodeJpg(imageFile,quality: 85));
+    setState(() {
+      file = compressedImageFile;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       body: ListView(
         children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: IconButton(icon: Icon(Icons.close), onPressed: () {
+              Navigator.pop(context);
+            }),
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(Icons.arrow_back),
-                iconSize: 30.0,
-              ),
               SizedBox(height: 10.0),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child:Text('เพิ่มข้อมูลนิสิต',style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold
-              ),),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child:Text('เพิ่มข้อมูลนิสิต',style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold
+                ),),
+                ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text('บันทึกข้อมูลนิสิตลงในรายวิชา',style:TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.grey
-                )),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Text('บันทึกข้อมูลนิสิตลงในรายวิชา',style:TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey
+                  )),
+                ),
               ),
               SizedBox(height: 10.0),
               Center(
@@ -148,7 +157,7 @@ class _NewStudentState extends State<NewStudent> {
                           child: GestureDetector(
                             onTap: getImage,
                             child: CircleAvatar(
-                              backgroundImage: AssetImage(_image.path),
+                              backgroundImage: FileImage(_image),
                             ),
                           ),
                         )
@@ -199,44 +208,6 @@ class _NewStudentState extends State<NewStudent> {
                           ),
                           keyboardType: TextInputType.text,
                         ),
-                        SizedBox(height: 20.0),
-                        TextFormField(
-                          controller: _controllers2,
-                          enabled: false,
-                          decoration: InputDecoration(
-                            hintText: 'วิชาเรียน',
-                            icon: Icon(Icons.accessibility_new),
-                          ),
-                          onSaved: (val) {
-                            subjectCode = val;
-                          },
-                          
-                        ),
-                        StreamBuilder(
-                          stream: Firestore.instance.collection('Subjects').snapshots(),
-                          builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
-                            if(snapshot.hasData){
-                              subject = snapshot.data.documents
-                                .map((doc) => Subject.fromMap(doc.data)).toList();
-                              return PopupMenuButton<String>(
-                                icon: Icon(Icons.arrow_drop_down),
-                                onSelected: (String value){
-                                  _controllers2.text = value;
-                                  
-                                },
-                                itemBuilder: (buildcontext) {
-                                  return subject.map<PopupMenuItem<String>>((Subject value) {
-                                    return new PopupMenuItem(child: new Text(value.name), value: value.uid.toString());
-                                  }).toList();
-                                  
-                                },
-                              );
-                            }else{
-                              return Center(
-                                child: Text('กำลังโหลดข้อมูล'),
-                              );
-                            }
-                        }),
                         SizedBox(height: 20.0),
                         TextFormField(
                           controller: _controllers,
@@ -325,7 +296,7 @@ class _NewStudentState extends State<NewStudent> {
                               }else{
                                 if(_formKey.currentState.validate()){
                                   _formKey.currentState.save();
-                                  createNisit(stdCode,subjectCode);
+                                  createNisit();
                                 }
                               }
                             },

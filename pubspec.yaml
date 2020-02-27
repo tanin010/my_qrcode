@@ -32,6 +32,10 @@ dependencies:
   image_picker_modern: ^0.4.12+3 
   firebase_storage: ^3.1.0
   url_launcher: ^5.0.2
+  uuid: ^2.0.4
+  cached_network_image: ^2.0.0
+  pin_code_fields: ^2.3.0+3
+  barcode_scan: ^1.0.0
   
 
 dev_dependencies:
@@ -48,8 +52,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
+  assets:
+      - assets/icon/add.png
+      - assets/icon/picture.png
+      - assets/image/student.png
+      - assets/image/books.png
+      - assets/image/scan.png
    # - assets/liang.jpg
   ##-assets/
   # An image asset can refer to one or more resolution-specific "variants", see

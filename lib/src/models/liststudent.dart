@@ -4,8 +4,9 @@ class ListStudent {
   String factName;
   String stdCode;
   String stdName;
+  String stdGrade;
   String stdYear;
-  String subjectCode;
+  double stdScore;
   String image;
   Timestamp regisTime;
 
@@ -16,7 +17,8 @@ class ListStudent {
     this.stdCode,
     this.stdName,
     this.stdYear,
-    this.subjectCode,
+    this.stdGrade,
+    this.stdScore,
     this.image,
     this.regisTime
   });
@@ -26,8 +28,9 @@ class ListStudent {
     stdCode = snapshot['stdCode'] ?? '',
     stdName = snapshot['stdName'] ?? '',
     stdYear = snapshot['stdYear'] ?? '',
+    stdGrade = snapshot['stdGrade'] ?? '',
+    stdScore = snapshot['stdScore'] ?? '',
     image = snapshot['image'] ?? '',
-    subjectCode = snapshot['subjectCode'] ?? '',
-    regisTime = snapshot['timestamp'] ?? '';
+    regisTime = snapshot['regisTime'] ?? '';
 
 }

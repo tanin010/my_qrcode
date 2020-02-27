@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:myqr_liang/src/models/subjects.dart';
 import 'package:myqr_liang/src/pages/subject/students_subject.dart';
-import 'package:myqr_liang/src/utils/constant.dart';
 
 class SubjectsPage extends StatefulWidget {
   @override
@@ -16,37 +13,12 @@ class _SubjectsPageState extends State<SubjectsPage> with SingleTickerProviderSt
   List<Subject> subject;
   @override
   Widget build(BuildContext context) {
-    var _width = MediaQuery.of(context).size.width / 2;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: Constant.G_COLOR,
-          title: Text("แสดงข้อมูลรายชื่อ"),
+          title: Text("แสดงรายวิชา"),
         ),
-        body: FabCircularMenu(
-            ringColor: Colors.grey,
-            options: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {},
-                  iconSize: 48.0,
-                  color: Colors.white),
-              IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {},
-                  iconSize: 48.0,
-                  color: Colors.white),
-              IconButton(
-                  icon: Icon(Icons.update),
-                  onPressed: () {},
-                  iconSize: 48.0,
-                  color: Colors.white),
-            ],
-            child: Container(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: StreamBuilder(
+        body: StreamBuilder(
                     stream: Firestore.instance.collection('Subjects').snapshots(),
                     builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
                       if(snapshot.hasData){
@@ -57,7 +29,7 @@ class _SubjectsPageState extends State<SubjectsPage> with SingleTickerProviderSt
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2),
-                        physics: BouncingScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: subject.length,
                         itemBuilder: (buildContext, index) {
                           return Padding(
@@ -75,16 +47,16 @@ class _SubjectsPageState extends State<SubjectsPage> with SingleTickerProviderSt
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     child: Container(
-                                      width: _width,
-                                      height: _width - 70,
+                                      width: MediaQuery.of(context).size.width / 2,
+                                      height: MediaQuery.of(context).size.width / 2 - 70,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(8.0),
-                                        /*child: FadeInImage(
-                                    image: NetworkImage(_categoryImage[index]),
-                                    fit: BoxFit.cover,
-                                    placeholder:
-                                        AssetImage('assets/images/loading.gif'),
-                                  ),*/
+                                        child: FadeInImage(
+                                          image: NetworkImage(subject[index].image),
+                                          fit: BoxFit.cover,
+                                          placeholder:
+                                              AssetImage('assets/icon/picture.png'),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -109,8 +81,6 @@ class _SubjectsPageState extends State<SubjectsPage> with SingleTickerProviderSt
                       }
                     },
                   )
-                ),
-              ),
-            )));
+          );
   }
 }

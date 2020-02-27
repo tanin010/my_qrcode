@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myqr_liang/src/models/liststudent.dart';
+import 'package:myqr_liang/src/pages/subject/addstudent.dart';
 import 'package:myqr_liang/src/pages/subject/qrcode_show.dart';
 
 class ListStudensPage extends StatefulWidget {
@@ -55,6 +56,15 @@ class _ListStudensPageState extends State<ListStudensPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('รายชื่อนิสิต'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(FontAwesomeIcons.userPlus), 
+            onPressed: () {
+              Navigator.push(context, 
+                  MaterialPageRoute(builder: (context) => AddStudenPage(subjId: widget.uid)));
+            }
+          )
+        ],
       ),
       body: StreamBuilder(
         stream: Firestore.instance.collection('Subjects').document(widget.uid).collection('nisits').snapshots(),
@@ -95,7 +105,7 @@ class _ListStudensPageState extends State<ListStudensPage> {
                             icon: Icon(FontAwesomeIcons.qrcode),
                             onPressed: () {
                               Navigator.push(context, 
-                                MaterialPageRoute(builder: (context) => QrCodePage(code: students[index].stdCode,image: students[index].image)));
+                                MaterialPageRoute(builder: (context) => QrCodePage(code: students[index].stdCode,subCode: widget.uid)));
                             },
                           ),
                           title: Text('เลขที่ Code: '+'${students[index].stdCode}',style: TextStyle(

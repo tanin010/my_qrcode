@@ -4,9 +4,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class QrCodePage extends StatefulWidget {
   final String code;
-  final String image;
+  final String subCode;
 
-  QrCodePage({@required this.code,@required this.image});
+  QrCodePage({@required this.code,@required this.subCode});
   @override
   _QrCodePageState createState() => _QrCodePageState();
 }
@@ -14,7 +14,7 @@ class QrCodePage extends StatefulWidget {
 class _QrCodePageState extends State<QrCodePage> {
   @override
   Widget build(BuildContext context) {
-    final message = '${widget.code}';
+    final message = "${widget.code},${widget.subCode}";
       return Scaffold(
         appBar: AppBar(
           title: Text('QR Code นิสิต'),
@@ -33,13 +33,10 @@ class _QrCodePageState extends State<QrCodePage> {
                         width: 280,
                         child: QrImage(
                           data: message,
-                          version: 1,
+                          version: QrVersions.auto,
                           size: 320,
                           gapless: false,
-                          embeddedImage: NetworkImage(widget.image),
-                          embeddedImageStyle: QrEmbeddedImageStyle(
-                            size: Size(80, 80),
-                          ),
+                          
                           errorStateBuilder: (cxt, err) {
                             return Container(
                               child: Center(
