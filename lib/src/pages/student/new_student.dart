@@ -26,7 +26,8 @@ class _NewStudentState extends State<NewStudent> {
   String postId = Uuid().v4(); 
   String stdCode;
   String subjectCode;
-  String stdName;
+  String stdfirstName;
+  String stdlastName;
   String factName;
   String subFactName;
   String stdYear;
@@ -67,7 +68,8 @@ class _NewStudentState extends State<NewStudent> {
       databaseRef.document(stdCode).setData({
         "stdCode": stdCode,
         "subjectCode": {},
-        "stdName": stdName,
+        "stdfirstName": stdfirstName,
+        "stdlstName": stdlastName,
         "factName": factName,
         "subFaceName": subFactName,
         "stdYear": stdYear,
@@ -75,10 +77,10 @@ class _NewStudentState extends State<NewStudent> {
         "timestamp": timestamp
       });
       doc = await databaseRef.document(stdCode).get();
-       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล คุณ $stdName')));
+       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล คุณ $stdfirstName $stdlastName')));
        Navigator.pop(context);
     }else{
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('มีชื่อ $stdName อยู่แล้ว')));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('มีชื่อ $stdfirstName $stdlastName อยู่แล้ว')));
     }
   }
 
@@ -200,10 +202,27 @@ class _NewStudentState extends State<NewStudent> {
                             }
                           },
                           onSaved: (val) {
-                            stdName = val;
+                            stdfirstName = val;
                           },
                           decoration: InputDecoration(
-                            hintText: 'ชื่อ-นามสกุล',
+                            hintText: 'ชื่อ',
+                            icon: Icon(Icons.person)
+                          ),
+                          keyboardType: TextInputType.text,
+                        ),
+                        TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty){
+                              return 'กรุณากรอกข้อมูล';
+                            }else{
+                              return null;
+                            }
+                          },
+                          onSaved: (val) {
+                            stdlastName = val;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'นามสกุล',
                             icon: Icon(Icons.person)
                           ),
                           keyboardType: TextInputType.text,

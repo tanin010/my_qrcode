@@ -4,7 +4,8 @@ class Student {
   String factName;
   String image;
   String stdCode;
-  String stdName;
+  String stdfirstName;
+  String stdlastName;
   String stdYear;
   String subFaceName;
   dynamic subjectCode;
@@ -16,7 +17,8 @@ class Student {
     this.factName,
     this.image,
     this.stdCode,
-    this.stdName,
+    this.stdfirstName,
+    this.stdlastName,
     this.stdYear,
     this.subFaceName,
     this.subjectCode,
@@ -27,7 +29,8 @@ class Student {
     factName = snapshot['factName'] ?? '',
     image = snapshot['image'] ?? '',
     stdCode = snapshot['stdCode'] ?? '',
-    stdName = snapshot['stdName'] ?? '',
+    stdfirstName = snapshot['stdfirstName'] ?? '',
+    stdlastName = snapshot['stdlastName'] ?? '',
     stdYear = snapshot['stdYear'] ?? '',
     subFaceName = snapshot['subFaceName'] ?? '',
     subjectCode = snapshot['subjectCode'] ?? '',
@@ -38,7 +41,8 @@ class Student {
       "factName": factName,
       "image": image,
       "stdCode": stdCode,
-      "stdName": stdName,
+      "stdfirstName": stdfirstName,
+      "stdlastName": stdlastName,
       "stdYear": stdYear,
       "subjectCode": subjectCode,
       "timestamp": timestamp

@@ -190,7 +190,7 @@ class _StudentDetailState extends State<StudentDetail> {
   void initState(){
     super.initState();
     student = Student.fromMap(widget.std.data);
-    stdname.text = student.stdName;
+    stdname.text = student.stdfirstName + " " + student.stdlastName;
     stdcode.text = student.stdCode;
     getSubject();
   }
@@ -209,7 +209,8 @@ class _StudentDetailState extends State<StudentDetail> {
       .setData({
         "factName": student.factName,
         "stdCode": student.stdCode,
-        "stdName": student.stdName,
+        "stdfirstName": student.stdfirstName,
+        "stdlastName": student.stdlastName,
         "stdYear": student.stdYear,
         "stdScore": 0.0,
         "stdGrade": 'F',
@@ -218,7 +219,7 @@ class _StudentDetailState extends State<StudentDetail> {
       }).then((_) {
         Firestore.instance.collection('Students').document(student.stdCode).updateData({'subjectCode.${details.code}': true});
       });
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล  ${student.stdName} เข้ารายวิชา ${stdsubject.text}')));
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('กำลังบันทึกข้อมูล  ${student.stdfirstName} เข้ารายวิชา ${stdsubject.text}')));
     Future.delayed(const Duration(milliseconds: 800), () {
       Navigator.pop(context);
     });
@@ -262,7 +263,7 @@ class _StudentDetailState extends State<StudentDetail> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    student.stdName,
+                    student.stdfirstName + " " + student.stdlastName,
                   ),
                   SizedBox(height: 4.0),
                   Row(
